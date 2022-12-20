@@ -88,3 +88,16 @@ nav ul{
     text-align: center;
     font-family: 'Open Sans', sans-serif;
   }
+
+/*  for mobile*/
+@media (max-width: 800px) {
+    .user-info{
+        display: inline-flex;
+        justify-content: space-between;
+        text-transform: uppercase;
+        margin: 10px;
+        color: white;
+        font-size: 18px;
+        font-family: 'Jost', sans-serif
+    }
+}
