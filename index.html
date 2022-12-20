@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,400;1,200&family=Poppins:ital,wght@0,300;1,500&family=Roboto+Condensed&family=Roboto+Mono&family=Unbounded:wght@600&display=swap" rel="stylesheet">
+    <title>The Saviour</title>
+</head>
+<body>
+    <nav>
+        <h1 id="nav-head">TheSaviour.com</h1>
+        <ul>
+            <li id="name"></li>
+            <li id="battery"></li>
+        </ul>
+    </nav>
+   
+<div id='map' class="map"></div>
+<h1 class="location-head">Live Location</h1>
+<div class="user-data">
+    <h2 class="user-data-head">User Data</h2>
+  <div class="data-cont">
+    <div class="user-info">
+        <p class="usrlabel">Name :</p>
+        <p id="fname" class="usrdata">name here</p>
+    </div>
+    <div class="user-info">
+        <p class="usrlabel">Phone Number :</p>
+        <p id="phonenumber" class="usrdata">number</p>
+    </div>
+    <div class="user-info">
+        <p class="usrlabel">Battery Percentage:</p>
+        <p id="battery" class="usrdata">90%</p>
+    </div>
+    <div class="user-info">
+        <p class="usrlabel">Email:</p>
+        <p id="email" class="usrdata">email</p>
+    </div>
+  </div>
+</div>
+
+<Script type="module">
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getFirestore, setDoc, addDoc, updateDoc,deleteDoc ,getDoc,doc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+
+   // TODO: Add SDKs for Firebase products that you want to use
+    // https://firebase.google.com/docs/web/setup#available-libraries
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+  apiKey: "AIzaSyBobvx7IucD9z4V0TxZtsXEs4ZISqLb82M",
+  authDomain: "the-saviour-7b9a0.firebaseapp.com",
+  databaseURL: "https://the-saviour-7b9a0-default-rtdb.firebaseio.com",
+  projectId: "the-saviour-7b9a0",
+  storageBucket: "the-saviour-7b9a0.appspot.com",
+  messagingSenderId: "695103598236",
+  appId: "1:695103598236:web:d4fcbdc7cd372900fd0759",
+  measurementId: "G-9D4K0JM005"
+};
+
+let lat,lng;
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    // Initialize Cloud Firestore and get a reference to the service
+    const db = getFirestore(app);
+
+   getDoc(doc(db,'Users','LlNqCVFjyeORLvkQLg02WwCbvYq2')).then(docSnap =>{
+    if(docSnap.exists())
+    {
+        console.log('Document dtaa:',docSnap.data()['lat'] )
+        console.log('Document dtaa:',docSnap.data()['lng'] )
+        lat=docSnap.data()['lat']
+        lng=docSnap.data()['lng']
+        document.getElementById('fname').innerHTML=docSnap.data()['fname']
+        document.getElementById('phonenumber').innerHTML=docSnap.data()['number']
+        document.getElementById('email').innerHTML=docSnap.data()['email']
+        // maps access
+        mapboxgl.accessToken = 'pk.eyJ1IjoiaGFja3lhYmhheSIsImEiOiJjbGJ3YmxmbnowdnAyM3FueTI0azl0eWk0In0.ECf6ppvlc05hneRwfKpdSA';
+
+
+const map = new mapboxgl.Map({
+  container: 'map',
+  style: 'mapbox://styles/mapbox/satellite-v9',
+  center: [lng, lat],
+  zoom: 18
+});
+
+map.addControl(new mapboxgl.NavigationControl());
+    }
+    else{
+        console.log('no data' )
+    }
+
+   })
+
+// wdw
+const geojson = {
+  type: 'FeatureCollection',
+  features: [
+
+    {
+      type: 'Feature',
+      geometry: {
+        type: 'Point',
+        coordinates: [77.99346166666666,30.27070666666667]
+      },
+      properties: {
+        title: 'Mapbox',
+        description: 'San Francisco, California'
+      }
+    }
+  ]
+};
+
+// add markers to map
+for (const feature of geojson.features) {
+  // create a HTML element for each feature
+  const el = document.createElement('div');
+  el.className = 'marker';
+
+  // make a marker for each feature and add to the map
+  new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(map);
+}
+
+new mapboxgl.Marker(el)
+  .setLngLat(feature.geometry.coordinates)
+  .setPopup(
+    new mapboxgl.Popup({ offset: 25 }) // add popups
+      .setHTML(
+        `<h3>${feature.properties.title}</h3><p>${feature.properties.description}</p>`
+      )
+  )
+  .addTo(map);
+
+</Script>
+</body>
+</html>
