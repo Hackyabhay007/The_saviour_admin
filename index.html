@@ -25,6 +25,10 @@
     <h2 class="user-data-head">User Data</h2>
   <div class="data-cont">
     <div class="user-info">
+        <p class="usrlabel">Google Maps Curent Location:</p>
+        <a  target="_blank" id="gmap" href="" class="usrdata">Current Location</a>
+    </div>
+    <div class="user-info">
         <p class="usrlabel">Name :</p>
         <p id="fname" class="usrdata">name here</p>
     </div>
@@ -51,9 +55,7 @@ console.log(currentpagelink);
 
 const userid = currentpagelink.slice(
     currentpagelink.indexOf('??') + 2,
-    currentpagelink.lastIndexOf('??'),
-    
-);
+    currentpagelink.length);
 console.log(userid);
 
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
@@ -93,7 +95,9 @@ setInterval(() => {
 }, 10000);
         lat=docSnap.data()['lat']
         lng=docSnap.data()['lng']
+        let gmap="https://maps.google.com/?q=" + lat + "," + lng;
         document.getElementById('fname').innerHTML=docSnap.data()['fname']
+        document.getElementById('gmap').href=gmap;
         document.getElementById('phonenumber').innerHTML=docSnap.data()['number']
         document.getElementById('email').innerHTML=docSnap.data()['email']
         // maps access
