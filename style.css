@@ -60,6 +60,11 @@ nav ul{
     font-size: 23px;
     font-family: 'Jost', sans-serif
 }
+
+.user-info #gmap{
+    text-decoration: none;
+    color: red;
+}
 .usrdata{
     color: rgb(58, 0, 0);
 }
