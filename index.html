@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v2.9.2/mapbox-gl.css' rel='stylesheet'>
+    <script src='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.js'></script>
+    <link href='https://api.mapbox.com/mapbox-gl-js/v2.11.0/mapbox-gl.css' rel='stylesheet' />
     <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Jost:ital,wght@0,200;0,400;1,200&family=Poppins:ital,wght@0,300;1,500&family=Roboto+Condensed&family=Roboto+Mono&family=Unbounded:wght@600&display=swap" rel="stylesheet">
     <title>The Saviour</title>
 </head>
@@ -44,6 +44,18 @@
 </div>
 
 <Script type="module">
+
+    //getting the href link
+    const currentpagelink = window.location.href;
+console.log(currentpagelink);
+
+const userid = currentpagelink.slice(
+    currentpagelink.indexOf('??') + 2,
+    currentpagelink.lastIndexOf('??'),
+    
+);
+console.log(userid);
+
       import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
     import { getFirestore, setDoc, addDoc, updateDoc,deleteDoc ,getDoc,doc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
 
@@ -68,73 +80,40 @@ let lat,lng;
     // Initialize Cloud Firestore and get a reference to the service
     const db = getFirestore(app);
 
-   getDoc(doc(db,'Users','LlNqCVFjyeORLvkQLg02WwCbvYq2')).then(docSnap =>{
+   getDoc(doc(db,'Users',userid)).then(docSnap =>{
     if(docSnap.exists())
     {
         console.log('Document dtaa:',docSnap.data()['lat'] )
         console.log('Document dtaa:',docSnap.data()['lng'] )
+       
+
+setInterval(() => {
+    lat=docSnap.data()['lat']
+        lng=docSnap.data()['lng']
+}, 10000);
         lat=docSnap.data()['lat']
         lng=docSnap.data()['lng']
         document.getElementById('fname').innerHTML=docSnap.data()['fname']
         document.getElementById('phonenumber').innerHTML=docSnap.data()['number']
         document.getElementById('email').innerHTML=docSnap.data()['email']
         // maps access
-        mapboxgl.accessToken = 'pk.eyJ1IjoiaGFja3lhYmhheSIsImEiOiJjbGJ3YmxmbnowdnAyM3FueTI0azl0eWk0In0.ECf6ppvlc05hneRwfKpdSA';
-
-
-const map = new mapboxgl.Map({
-  container: 'map',
-  style: 'mapbox://styles/mapbox/streets-v10',
-  center: [lng, lat],
-  zoom: 18
-});
-
-map.addControl(new mapboxgl.NavigationControl());
+       
     }
     else{
         console.log('no data' )
     }
+    mapboxgl.accessToken = 'pk.eyJ1IjoiaGFja3lhYmhheSIsImEiOiJjbGJ3YmxmbnowdnAyM3FueTI0azl0eWk0In0.ECf6ppvlc05hneRwfKpdSA';
+        const map = new mapboxgl.Map({
+            container: 'map', // container ID
+            projection: 'globe',
+            style: 'mapbox://styles/mapbox/streets-v10',// style URL // style URL
+            center: [lng,lat ], // starting position [lng, lat]
+            zoom:18, // starting zoom
+        });
+map.addControl(new mapboxgl.NavigationControl());
 
    })
 
-// wdw
-const geojson = {
-  type: 'FeatureCollection',
-  features: [
-
-    {
-      type: 'Feature',
-      geometry: {
-        type: 'Point',
-        coordinates: [77.99346166666666,30.27070666666667]
-      },
-      properties: {
-        title: 'Mapbox',
-        description: 'San Francisco, California'
-      }
-    }
-  ]
-};
-
-// add markers to map
-for (const feature of geojson.features) {
-  // create a HTML element for each feature
-  const el = document.createElement('div');
-  el.className = 'marker';
-
-  // make a marker for each feature and add to the map
-  new mapboxgl.Marker(el).setLngLat(feature.geometry.coordinates).addTo(map);
-}
-
-new mapboxgl.Marker(el)
-  .setLngLat(feature.geometry.coordinates)
-  .setPopup(
-    new mapboxgl.Popup({ offset: 25 }) // add popups
-      .setHTML(
-        `<h3>${feature.properties.title}</h3><p>${feature.properties.description}</p>`
-      )
-  )
-  .addTo(map);
 
 </Script>
 </body>
