@@ -22,8 +22,8 @@
     <h2 class="user-data-head">User Data</h2>
   <div class="data-cont">
     <div class="user-info">
-        <p class="usrlabel">Google Maps Current Location:</p>
-        <a  target="_blank" id="gmap" href="" class="usrdata">Current Location</a>
+        <p class="usrlabel">Google Maps Location:</p>
+        <a  target="_blank" id="gmap" href="" class="usrdata">Link</a>
     </div>
     <div class="user-info">
         <p class="usrlabel">Device Speed:</p>
@@ -94,13 +94,18 @@ let lat,lng;
     // Initialize Cloud Firestore and get a reference to the service
     const db = getFirestore(app);
 
+    //refresh Firebase
+    setInterval(() => {
+       
+    },1000);
+    
    getDoc(doc(db,'Users',userid)).then(docSnap =>{
     if(docSnap.exists())
     {
         console.log('Document dtaa:',docSnap.data()['lat'] )
         console.log('Document dtaa:',docSnap.data()['lng'] )
        
-setInterval(() => {
+
     lat=docSnap.data()['lat']
         lng=docSnap.data()['lng']
         let gmap="https://maps.google.com/?q=" + lat + "," + lng;
@@ -116,7 +121,6 @@ setInterval(() => {
                 document.getElementById('movement').innerHTML= "Still"
         }
 
-}, 1000);
     
         document.getElementById('fname').innerHTML=docSnap.data()['fname']
         document.getElementById('phonenumber').innerHTML=docSnap.data()['number']
