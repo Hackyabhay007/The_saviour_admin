@@ -13,10 +13,7 @@
 <body>
     <nav>
         <h1 id="nav-head">TheSaviour.com</h1>
-        <ul>
-            <li id="name"></li>
-            <li id="battery"></li>
-        </ul>
+       
     </nav>
    
 <div id='map' class="map"></div>
@@ -25,8 +22,20 @@
     <h2 class="user-data-head">User Data</h2>
   <div class="data-cont">
     <div class="user-info">
-        <p class="usrlabel">Google Maps Curent Location:</p>
+        <p class="usrlabel">Google Maps Current Location:</p>
         <a  target="_blank" id="gmap" href="" class="usrdata">Current Location</a>
+    </div>
+    <div class="user-info">
+        <p class="usrlabel">Device Speed:</p>
+        <p id="speed" class="usrdata">0kmph</p>
+    </div>
+    <div class="user-info">
+        <p class="usrlabel">Location Accuracy:</p>
+        <p id="accuracy" class="usrdata">Accurate</p>
+    </div>
+    <div class="user-info">
+        <p class="usrlabel">Deice is Moving/Still:</p>
+        <p id="movement" class="usrdata">.</p>
     </div>
     <div class="user-info">
         <p class="usrlabel">Name :</p>
@@ -44,8 +53,11 @@
         <p class="usrlabel">Email:</p>
         <p id="email" class="usrdata">email</p>
     </div>
+    
   </div>
 </div>
+
+   
 
 <Script type="module">
 
@@ -88,24 +100,34 @@ let lat,lng;
         console.log('Document dtaa:',docSnap.data()['lat'] )
         console.log('Document dtaa:',docSnap.data()['lng'] )
        
-
 setInterval(() => {
     lat=docSnap.data()['lat']
         lng=docSnap.data()['lng']
-}, 10000);
-        lat=docSnap.data()['lat']
-        lng=docSnap.data()['lng']
         let gmap="https://maps.google.com/?q=" + lat + "," + lng;
-        document.getElementById('fname').innerHTML=docSnap.data()['fname']
         document.getElementById('gmap').href=gmap;
+        document.getElementById('speed').innerHTML=docSnap.data()['Device Speed'] +" m/s"
+        document.getElementById('accuracy').innerHTML=docSnap.data()['accuracy']
+
+        if(docSnap.data()['Device Speed']>0)
+        {
+                document.getElementById('movement').innerHTML= "Moving"
+        }
+        else{
+                document.getElementById('movement').innerHTML= "Still"
+        }
+
+}, 1000);
+    
+        document.getElementById('fname').innerHTML=docSnap.data()['fname']
         document.getElementById('phonenumber').innerHTML=docSnap.data()['number']
         document.getElementById('email').innerHTML=docSnap.data()['email']
-        // maps access
        
     }
     else{
         console.log('no data' )
     }
+    lat=docSnap.data()['lat']
+        lng=docSnap.data()['lng']
     mapboxgl.accessToken = 'pk.eyJ1IjoiaGFja3lhYmhheSIsImEiOiJjbGJ3YmxmbnowdnAyM3FueTI0azl0eWk0In0.ECf6ppvlc05hneRwfKpdSA';
         const map = new mapboxgl.Map({
             container: 'map', // container ID
